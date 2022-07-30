@@ -10,10 +10,10 @@
 
   <title>Photo Gallery</title>
 </head>
-<body>
+<body class="#f5f5f5 grey lighten-4">
     <div id="menu">
       <nav class="menu" data-target="menu">
-        <div class="nav-wrapper #3f51b5 indigo">
+        <div class="nav-wrapper #212121 grey darken-4">
           <form>
             <div class="input-field">
               <input id="search-example" type="search" required="">
@@ -30,25 +30,25 @@
 
   <div class="App">
     <div class="container">
+        
         <div class="row">
+          <h1>Albums</h1>
       
         </div>
     </div>
   </div>
 
-
   <script id="album-template" type="text/html">
-    <div class="col s1 card card-panel hoverable" style="width: 225px; margin: 5px">
+    <div class="col s1 card card-panel hoverable center-align" style="width: 190px; margin: 5px; padding: 0px;">
       <div class="card-image">
         <img src={{thumbnailUrl}} />
-        <span class="card-title">{{title}}</span>
+        <p class="card-title" style="display:flex; height: 100%; align-items: center; padding: 12px; margin: 0; font-size: 16px; font-weight: 600;">{{title}}</p>
       </div>
-      <div class="card-action">
-        <button id="view-album">VIEW ALBUM</button>
+      <div class="cursor card-action #212121 grey darken-4">
+        <a style="margin-right: 0; color: white; font-weight: 600;" href="#">VIEW ALBUM</a>
       </div>
     </div> 
   </script>
-
   
   <script id="photo-template" type="text/html">
     <div class="col s1 card card-panel hoverable" style="width: 300px; margin: 5px">
@@ -59,14 +59,10 @@
     </div> 
   </script>
 
-
-  
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js"></script>
   <script src="web-album.js"></script>
   <script src="app.js"></script>
-
 
   <script>
     $(document).ready(function(){

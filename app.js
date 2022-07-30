@@ -5,18 +5,23 @@ const $viewButton = document.getElementById('view-button');
 
 
 const viewPhotos = false;
+const alb = new Albums();
 
 document.addEventListener('DOMContentLoaded', async (e) => {
-  const alb = new Albums();
   const dataResult = await alb.getAll();
   paint(dataResult);
 
 });
 
 
-$viewButton.addEventListener('click', (e) => {
+// $viewButton.addEventListener('click', async (e) => {
+//   viewPhotos = true;
+//   $mainView.innerHTML = '';
+//   const dataResult = await alb.getAll();
+//   paint(dataResult)
 
-})
+
+// })
 
 
 $filterSearch.addEventListener('keyup', (e) => {

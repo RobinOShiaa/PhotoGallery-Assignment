@@ -1,10 +1,9 @@
 const $albumTemplate = document.getElementById('album-template').innerHTML;
 const $mainView = document.querySelector('.row');
 const $filterSearch = document.getElementById('search-example');
-const $viewButton = document.getElementById('view-button');
 
 
-const viewPhotos = false;
+let viewPhotos = false;
 const alb = new Albums();
 
 document.addEventListener('DOMContentLoaded', async (e) => {
@@ -14,14 +13,22 @@ document.addEventListener('DOMContentLoaded', async (e) => {
 });
 
 
-// $viewButton.addEventListener('click', async (e) => {
-//   viewPhotos = true;
-//   $mainView.innerHTML = '';
-//   const dataResult = await alb.getAll();
-//   paint(dataResult)
+$mainView.addEventListener('click', async (e) => {
+  if (e.target.id === 'view-button') {
+    viewPhotos = true;
+    const name = e.target.parentElement.previousElementSibling.children[1].textContent;
+    console.log(name)
+    $mainView.innerHTML = '';
+    // const dataResult = await alb.getAll();
+    // const photos = dataResult
+   
+      
+    // })
+    // console.log(photos)
 
+  }
 
-// })
+})
 
 
 $filterSearch.addEventListener('keyup', (e) => {

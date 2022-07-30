@@ -18,6 +18,7 @@ class Albums {
       }, {});
       photos.forEach(photo => dataResult[photo.albumId].content.push(photo));
       try {
+        console.log(dataResult)
         resolve(dataResult);
       } catch(error) {
         reject(error)

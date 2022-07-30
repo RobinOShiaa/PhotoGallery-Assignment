@@ -8,6 +8,10 @@
   margin-top: 10%;
 }
 
+button:hover {
+  cursor: pointer;
+}
+
 .cursor { cursor: pointer;}
 
 .titleText {

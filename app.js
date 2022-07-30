@@ -1,6 +1,10 @@
 const $albumTemplate = document.getElementById('album-template').innerHTML;
 const $mainView = document.querySelector('.row');
 const $filterSearch = document.getElementById('search-example');
+const $viewButton = document.getElementById('view-button');
+
+
+const viewPhotos = false;
 
 document.addEventListener('DOMContentLoaded', async (e) => {
   const alb = new Albums();
@@ -8,6 +12,12 @@ document.addEventListener('DOMContentLoaded', async (e) => {
   paint(dataResult);
 
 });
+
+
+$viewButton.addEventListener('click', (e) => {
+
+})
+
 
 $filterSearch.addEventListener('keyup', (e) => {
   const text = e.target.value.toLowerCase();
@@ -37,6 +47,3 @@ const paint = (data) => {
   }
 };
 
-function filterTasks(e) {
- 
-}

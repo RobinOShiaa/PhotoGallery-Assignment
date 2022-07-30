@@ -11,20 +11,21 @@
   <title>Photo Gallery</title>
 </head>
 <body>
-  
-    <nav>
-      <div class="nav-wrapper #3f51b5 indigo">
-        <form>
-          <div class="input-field">
-            <input id="search-example" type="search" required="">
-            <label class="label-icon" for="search-example">
-              <i class="material-icons">search</i>
-            </label>
-            <i class="material-icons">close</i>
-          </div>
-        </form>
-      </div>
-    </nav>
+    <div id="menu">
+      <nav class="menu" data-target="menu">
+        <div class="nav-wrapper #3f51b5 indigo">
+          <form>
+            <div class="input-field">
+              <input id="search-example" type="search" required="">
+              <label class="label-icon" for="search-example">
+                <i class="material-icons">search</i>
+              </label>
+              <i class="material-icons">close</i>
+            </div>
+          </form>
+        </div>
+      </nav>
+    </div>
 
 
   <div class="App">
@@ -48,10 +49,22 @@
     </div> 
   </script>
 
+  
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js"></script>
   <script src="web-album.js"></script>
   <script src="app.js"></script>
+
+
+  <script>
+    $(document).ready(function(){
+      $(window).scroll(function(){
+        if($(window).scrollTop()>150){
+          $('nav').addClass('sticky-nav');
+        }
+      })
+    })
+  </script>
 </body>
 </html>

@@ -1,0 +1,5 @@
+.sticky-nav {
+  z-index: 10000;
+  position:fixed;
+  top:0;
+}

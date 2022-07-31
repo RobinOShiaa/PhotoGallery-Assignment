@@ -4,7 +4,7 @@ const $filterSearch = document.getElementById('search-example');
 const $photosTemplate = document.getElementById('photo-template').innerHTML;
 const $backButton = document.getElementsByClassName('back-button');
 
-let viewPhotos = false;
+let viewPhoto = false;
 const alb = new Albums();
 
 
@@ -20,7 +20,6 @@ $mainView.addEventListener('click', async (e) => {
   const dataResult = await alb.getAll();
   switch(e.target.id) {
     case 'view-button' :
-      viewPhotos = true;
       const albumName = e.target.parentElement.previousElementSibling.children[1].textContent;
       const albumID = e.target.nextElementSibling.textContent;
       $mainView.innerHTML = 
@@ -38,7 +37,21 @@ $mainView.addEventListener('click', async (e) => {
       break;
 
     case 'zoom_in':
-      window.location.assign(`${e.target.parentElement.parentElement.previousElementSibling.previousElementSibling.src}`);
+      viewPhoto = !viewPhoto;
+      let downloadIcon = e.target.parentElement.previousElementSibling;
+      let photoTitleElement = e.target.parentElement.parentElement.previousElementSibling
+      const emptyTitle = "";
+      let photoTitle = e.target.parentElement.parentElement.previousElementSibling.textContent;
+
+      if(viewPhoto) {
+        downloadIcon.style = "visibility:hidden;";
+        photoTitleElement.style = "opacity:0; display:flex; height: 190px; width: 100%; justify-content: center; align-items: center; padding: 12px; margin: 0; font-size: 16px; font-weight: 600;";
+      } else {
+        downloadIcon.style = "visibility:initial";
+        photoTitleElement.style = "opacity:1; display:flex; height: 190px; width: 100%; justify-content: center; align-items: center; padding: 12px; margin: 0; font-size: 16px; font-weight: 600;";
+      }
+      
+      
       break;
 
 

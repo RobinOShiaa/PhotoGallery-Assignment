@@ -16,9 +16,10 @@ document.addEventListener('DOMContentLoaded', async (e) => {
 $mainView.addEventListener('click', async (e) => {
   if (e.target.id === 'view-button') {
     viewPhotos = true;
+    const albumName = e.target.parentElement.previousElementSibling.children[1].textContent;
     const albumID = e.target.nextElementSibling.textContent;
     console.log(albumID);
-    $mainView.innerHTML = '';
+    $mainView.innerHTML = `<h1>Photos from: ${albumName}</h1>`;
     const dataResult = await alb.getAll();
     const photos = dataResult[albumID].content;
     paintPhotos(photos);

@@ -10,13 +10,8 @@ const alb = new Albums();
 
 
 document.addEventListener('DOMContentLoaded', async (e) => {
-  
   const dataResult = await alb.getAll();
   paintAlbums(dataResult);
-  if(confirm("Press this confirm button!\nYou have two choices.")) {
-    console.log($mainView.innerHTML='<h1>FART</h1>')
-  }
-
 });
 
 

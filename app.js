@@ -17,26 +17,33 @@ document.addEventListener('DOMContentLoaded', async (e) => {
 
 
 $mainView.addEventListener('click', async (e) => {
-  if (e.target.id === 'view-button') {
-    viewPhotos = true;
-    const albumName = e.target.parentElement.previousElementSibling.children[1].textContent;
-    const albumID = e.target.nextElementSibling.textContent;
-    $mainView.innerHTML = `
-      <div style="display: flex; align-items: center;">
-        <i id="back-button" class="medium material-icons cursor arrow" style="color: #212121; width: 60px;">arrow_back</i>
-        <h1 style="font-size:32px; margin: 0; text-transform: uppercase;">${albumName}</h1>
-      </div>`;
-    const dataResult = await alb.getAll();
-    const photos = dataResult[albumID].content;
-    paintPhotos(photos);
-  } else if(e.target.id === 'back-button'){
-      
-
-      const dataResult = await alb.getAll();
+  const dataResult = await alb.getAll();
+  switch(e.target.id) {
+    case 'view-button' :
+      viewPhotos = true;
+      const albumName = e.target.parentElement.previousElementSibling.children[1].textContent;
+      const albumID = e.target.nextElementSibling.textContent;
+      $mainView.innerHTML = 
+              `<div style="display: flex; align-items: center;">
+                <i id="back-button" class="medium material-icons cursor arrow" style="color: #212121; width: 60px;">arrow_back</i>
+                <h1 style="font-size:32px; margin: 0; text-transform: uppercase;">${albumName}</h1>
+              </div>`;
+      const photos = dataResult[albumID].content;
+      paintPhotos(photos);
+      break;
+    
+    case 'back-button':
       paintAlbums(dataResult);
       viewPhotos = false;
-    }
-  
+      break;
+
+    case 'zoom_in':
+      window.location.assign(`${e.target.parentElement.parentElement.previousElementSibling.previousElementSibling.src}`);
+      break;
+
+
+  }
+
 });
 
 

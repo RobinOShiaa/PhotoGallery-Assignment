@@ -2,9 +2,11 @@ const $albumTemplate = document.getElementById('album-template').innerHTML;
 const $mainView = document.querySelector('.row');
 const $filterSearch = document.getElementById('search-example');
 const $photosTemplate = document.getElementById('photo-template').innerHTML;
+const $backButton = document.getElementsByClassName('back-button');
 
 let viewPhotos = false;
 const alb = new Albums();
+
 
 document.addEventListener('DOMContentLoaded', async (e) => {
   const dataResult = await alb.getAll();
@@ -13,20 +15,30 @@ document.addEventListener('DOMContentLoaded', async (e) => {
 });
 
 
+
 $mainView.addEventListener('click', async (e) => {
   if (e.target.id === 'view-button') {
     viewPhotos = true;
     const albumName = e.target.parentElement.previousElementSibling.children[1].textContent;
     const albumID = e.target.nextElementSibling.textContent;
-    console.log(albumID);
-    $mainView.innerHTML = `<h1>Photos from: ${albumName}</h1>`;
+    $mainView.innerHTML = `
+      <div style="display: flex; align-items: center;">
+        <i id="back-button" class="medium material-icons cursor arrow" style="color: #212121; width: 60px;">arrow_back</i>
+        <h1 style="font-size:32px; margin: 0; text-transform: uppercase;">${albumName}</h1>
+      </div>`;
     const dataResult = await alb.getAll();
     const photos = dataResult[albumID].content;
     paintPhotos(photos);
+  } else if(e.target.id === 'back-button'){
+      
 
-  }
+      const dataResult = await alb.getAll();
+      paintAlbums(dataResult);
+      viewPhotos = false;
+    }
+  
+});
 
-})
 
 
 $filterSearch.addEventListener('keyup', (e) => {
@@ -43,6 +55,7 @@ $filterSearch.addEventListener('keyup', (e) => {
 });
 
 const paintAlbums = (data) => {
+  $mainView.innerHTML = '<h1>Albums</h1>';
   try {
     Object.keys(data).map(id => {
       const html = Mustache.render($albumTemplate, {

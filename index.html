@@ -27,52 +27,58 @@
       </nav>
     </div>
 
-
-  <div class="App">
-    <div class="container">
-        
-        <div class="row">
-          <h1>Albums</h1>
-      
-        </div>
+    <div class="App">
+      <div class="container">
+          <div class="row">
+            <h1>Albums</h1>
+          </div>
+      </div>
     </div>
-  </div>
 
-  <script id="album-template" type="text/html">
-    <div class="col s1 card card-panel hoverable center-align" style="width: 190px; margin: 5px; padding: 0px;">
-      <div class="card-image">
-        <img src={{thumbnailUrl}} />
-        <p class="card-title" style="display:flex; height: 100%; align-items: center; padding: 12px; margin: 0; font-size: 16px; font-weight: 600;">{{title}}</p>
-      </div>
-      <div class="cursor card-action #212121 grey darken-4">
-        <div id="view-button" style="margin-right: 0; color: white; font-weight: 600;" href="#">VIEW ALBUM</div>
-        <span style="visibility:hidden;">{{id}}</span>
-      </div>
-    </div> 
-  </script>
-  
-  <script id="photo-template" type="text/html">
-    <div class="col s1 card card-panel hoverable" style="width: 300px; margin: 5px">
-      <div class="card-image">
-        <img src={{thumbnailUrl}} />
-        <span class="card-title">{{title}}</span>
-      </div>
-    </div> 
-  </script>
+    <script id="album-template" type="text/html">
+      <div class="col s1 card card-panel hoverable center-align" style="width: 190px; margin: 5px; padding: 0px;">
+        <div class="card-image">
+          <img src={{thumbnailUrl}} />
+          <p class="card-title" style="display:flex; height: 100%; width: 100%; justify-content: center; align-items: center; padding: 12px; margin: 0; font-size: 16px; font-weight: 600;">{{title}}</p>
+        </div>
+        <div class="cursor card-action #212121 grey darken-4">
+          <div id="view-button" style="margin-right: 0; color: white; font-weight: 600;" href="#">VIEW ALBUM</div>
+          <span style="visibility:hidden; position: absolute;">{{id}}</span>
+        </div>
+      </div> 
+    </script>
+    
+    <script id="photo-template" type="text/html">
+      <div class="col s1 card card-panel hoverable center-align" style="width: 190px; margin: 5px; padding: 0;">
+        <div class="card-image">
+          <img src={{thumbnailUrl}} />
+          <p class="card-title" style="display:flex; height: 190px; width: 100%; justify-content: center; align-items: center; padding: 12px; margin: 0; font-size: 16px; font-weight: 600;">{{title}}</p>
+          <div style="display: flex; justify-content: right; width: 100%; bottom: 0; position: absolute; ">
+            <button class="cursor" style="background: none;">
+              <i class="tiny material-icons cursor">cloud_download</i>
+            </button>
+            
+            <button id="zoom_in" class="cursor" style="background: none;">
+              <i class="tiny material-icons cursor">zoom_in</i>
+            </button>
+          </div>
+        </div>
+      </div> 
+    </script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js"></script>
-  <script src="web-album.js"></script>
-  <script src="app.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.min.js"></script>
+    <script src="web-album.js"></script>
+    <script src="app.js"></script>
 
-  <script>
-    $(document).ready(function(){
-      $(window).scroll(function(){
-        if($(window).scrollTop()>150){
-          $('nav').addClass('sticky-nav');
-        }
+    <script>
+      $(document).ready(function(){
+        $(window).scroll(function(){
+          if($(window).scrollTop()>150){
+            $('nav').addClass('sticky-nav');
+          }
+        })
       })
-    })
-  </script>
+    </script>
 </body>
 </html>

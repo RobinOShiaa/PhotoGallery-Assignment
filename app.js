@@ -9,6 +9,8 @@ const $filterSearch = document.getElementById('search-example');
 const $backButton = document.getElementsByClassName('back-button');
 const $nextPage = document.getElementById('next-page');
 const $previousPage = document.getElementById('previous-page');
+const $pages = document.querySelector('.pagination');
+
 
 let viewingPhotos = false;
 const alb = new Albums();
@@ -16,6 +18,7 @@ let albums_current_page = 1;
 let photos_current_page = 1;
 
 let rows = 24;
+let num_of_totalPages;
 
 function DisplayList(items,rows_per_page,page) {
   page --;
@@ -25,7 +28,6 @@ function DisplayList(items,rows_per_page,page) {
   return paginatedItems;
   
 }
-
 // Event listener on the startup of the webpage
 document.addEventListener('DOMContentLoaded', async () => {
   const dataResult = Object.entries(await alb.getAll()).slice(0);

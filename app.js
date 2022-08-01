@@ -2,19 +2,32 @@ const $albumTemplate = document.getElementById('album-template').innerHTML;
 const $mainView = document.querySelector('.row');
 const $filterSearch = document.getElementById('search-example');
 const $photosTemplate = document.getElementById('photo-template').innerHTML;
-const $backButton = document.getElementsByClassName('back-button');
+const $nextPage = document.getElementById('next-page');
+const $previousPage = document.getElementById('previous-page');
 
 let viewPhoto = false;
+let current_page = 1;
+let rows = 24;
+let end = false;
 const alb = new Albums();
 
-
+function DisplayList(items,rows_per_page,page) {
+  items = Object.entries(items).slice(0)
+  page --;
+  let start = rows_per_page * page;
+  let end = start + rows_per_page;
+  let paginatedItems = items.slice(start, end);
+  return paginatedItems;
+  
+}
 
 document.addEventListener('DOMContentLoaded', async (e) => {
   const dataResult = await alb.getAll();
-  paintAlbums(dataResult);
+  const paginated = DisplayList(dataResult,rows,current_page)
+
+  paintAlbums(paginated);
+  
 });
-
-
 
 $mainView.addEventListener('click', async (e) => {
   const dataResult = await alb.getAll();
@@ -30,19 +43,16 @@ $mainView.addEventListener('click', async (e) => {
       const photos = dataResult[albumID].content;
       paintPhotos(photos);
       break;
-    
     case 'back-button':
-      paintAlbums(dataResult);
+      paintAlbums(DisplayList(dataResult,rows,current_page));
       viewPhotos = false;
-      break;
-
+      break; 
     case 'zoom_in':
       viewPhoto = !viewPhoto;
       let downloadIcon = e.target.parentElement.previousElementSibling;
       let photoTitleElement = e.target.parentElement.parentElement.previousElementSibling
       const emptyTitle = "";
       let photoTitle = e.target.parentElement.parentElement.previousElementSibling.textContent;
-
       if(viewPhoto) {
         downloadIcon.style = "visibility:hidden;";
         photoTitleElement.style = "opacity:0; display:flex; height: 190px; width: 100%; justify-content: center; align-items: center; padding: 12px; margin: 0; font-size: 16px; font-weight: 600;";
@@ -50,15 +60,32 @@ $mainView.addEventListener('click', async (e) => {
         downloadIcon.style = "visibility:initial";
         photoTitleElement.style = "opacity:1; display:flex; height: 190px; width: 100%; justify-content: center; align-items: center; padding: 12px; margin: 0; font-size: 16px; font-weight: 600;";
       }
-      
-      
       break;
-
-
   }
-
 });
 
+$nextPage.addEventListener("click", async () => {
+    if (!end) {
+      const dataResult = await alb.getAll();
+      current_page++;
+      paintAlbums(DisplayList(dataResult,rows,current_page));
+    }
+  
+  
+})
+
+$previousPage.addEventListener("click", async () => {
+    if (current_page > 1) {
+      if (end) {
+        end = false;
+      }
+      const dataResult = await alb.getAll();
+      current_page--;
+      paintAlbums(DisplayList(dataResult,rows,current_page));
+    }
+    
+
+})
 
 
 $filterSearch.addEventListener('keyup', (e) => {
@@ -76,21 +103,27 @@ $filterSearch.addEventListener('keyup', (e) => {
 
 const paintAlbums = (data) => {
   $mainView.innerHTML = '<h1>Albums</h1>';
-  try {
-    Object.keys(data).map(id => {
-      const html = Mustache.render($albumTemplate, {
-        title : data[id].title,
-        thumbnailUrl : data[id].content[0].thumbnailUrl,
-        id : id
-      });
-      $mainView.insertAdjacentHTML('beforeend',html) 
-    });
-  }
-  catch(e) {
-    throw new Error(e);
-  }
-};
+  if(data.length === 0) {
+    $mainView.insertAdjacentHTML('beforeend','<h2>No content</h2>')
+    end = true;
+  } else {
+      try {
+        data.map(id => {
+          const html = Mustache.render($albumTemplate, {
+            title : id[1].title,
+            thumbnailUrl : id[1].content[0].thumbnailUrl,
+            id : id[0]
+          });
+          $mainView.insertAdjacentHTML('beforeend',html) 
+        });
+      }
+      catch(e) {
+        throw new Error(e);
+      }
 
+  }
+  
+};
 
 const paintPhotos = (data) => {
   try {

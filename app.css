@@ -8,6 +8,11 @@
   margin-top: 10%;
 }
 
+.pagination {
+  display : flex;
+  justify-content: center;
+}
+
 .cursor { 
   background: none !important;
   color: white !important;

@@ -16,7 +16,7 @@
         <div class="nav-wrapper #212121 grey darken-4">  
           <form>
             <div class="input-field">
-              <input id="search-example" type="search" required="">
+              <input id="search-example" type="search" placeholder="Search here.." required="">
               <label class="label-icon" for="search-example">
                 <i class="material-icons">search</i>
               </label>
@@ -29,8 +29,11 @@
     <div class="App">
       <div class="container">
           <div class="row">
-            <h1>Albums</h1>
           </div>
+          <ul class="pagination">
+            <li class="enabled"><a href="#!"><i id="previous-page" class="material-icons">chevron_left</i></a></li>
+            <li class="enabled"><a href="#!"><i id="next-page" class="material-icons">chevron_right</i></a></li>
+          </ul>
       </div>
     </div>
     <script id="album-template" type="text/html">

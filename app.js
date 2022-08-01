@@ -7,44 +7,58 @@ const $mainView = document.querySelector('.row');
 const $filterSearch = document.getElementById('search-example');
 // Button to return to albums 
 const $backButton = document.getElementsByClassName('back-button');
+const $nextPage = document.getElementById('next-page');
+const $previousPage = document.getElementById('previous-page');
 
-let viewPhoto = false;
+let viewingPhotos = false;
 const alb = new Albums();
+let albums_current_page = 1;
+let photos_current_page = 1;
+
+let rows = 24;
+
+function DisplayList(items,rows_per_page,page) {
+  page --;
+  let start = rows_per_page * page;
+  let end = start + rows_per_page;
+  let paginatedItems = items.slice(start, end);
+  return paginatedItems;
+  
+}
 
 // Event listener on the startup of the webpage
 document.addEventListener('DOMContentLoaded', async () => {
-  const dataResult = await alb.getAll();
+  const dataResult = Object.entries(await alb.getAll()).slice(0);
   // store data set inside session storage to be referenced later throughout the code
   sessionStorage.setItem('data',JSON.stringify(dataResult));
-  console.log(JSON.parse(sessionStorage.getItem('data', dataResult)));
-  paintAlbums(dataResult);
+  const paginated = DisplayList(dataResult,rows,albums_current_page)
+  paintAlbums(paginated);
 });
 
 $mainView.addEventListener('click', (e) => {
   switch(e.target.id) {
     case 'view-button' :
+      viewingPhotos = true;
       // Retrieve data set
       const dataResult = JSON.parse(sessionStorage.getItem('data'));
       const albumName = e.target.parentElement.previousElementSibling.children[1].textContent;
+      sessionStorage.setItem('album',JSON.stringify(albumName));
       const albumID = e.target.nextElementSibling.textContent;
       // Set heading of corresponding photos viewed
-      $mainView.innerHTML = 
-              `<div style="display: flex; align-items: center;">
-                <i id="back-button" class="medium material-icons cursor arrow" style="color: #212121; width: 60px;">arrow_back</i>
-                <h1 style="font-size:32px; margin: 0; text-transform: uppercase;">${albumName}</h1>
-              </div>`;
-      const photos = dataResult[albumID].content;
-      paintPhotos(photos);
+     
+      const photos = Object.fromEntries(dataResult)[albumID].content;
+      console.log(photos);
+      sessionStorage.setItem('current_photos',JSON.stringify(photos));
+      paintPhotos(DisplayList(photos,rows,photos_current_page));
       break;
     
     case 'back-button':
-      paintAlbums(JSON.parse(sessionStorage.getItem('data')));
-      viewPhotos = false;
+      photos_current_page = 1;
+      paintAlbums(DisplayList(JSON.parse(sessionStorage.getItem('data')),rows,albums_current_page));
+      viewingPhotos = false;
       break;
 
     case 'zoom_in':
-      viewPhoto = !viewPhoto;
-      let downloadIcon = e.target.parentElement.previousElementSibling;
       let photoTitleElement = e.target.parentElement.parentElement.previousElementSibling;
       let newVal = !eval(e.target.getAttribute('viewed'));
       
@@ -52,14 +66,11 @@ $mainView.addEventListener('click', (e) => {
     
 
       if(newVal) {
-        downloadIcon.style = "visibility:hidden;";
         photoTitleElement.style = "opacity:0; display:flex; height: 190px; width: 100%; justify-content: center; align-items: center; padding: 12px; margin: 0; font-size: 16px; font-weight: 600;";
       } else {
-        downloadIcon.style = "visibility:initial";
         photoTitleElement.style = "opacity:1; display:flex; height: 190px; width: 100%; justify-content: center; align-items: center; padding: 12px; margin: 0; font-size: 16px; font-weight: 600;";
       }
       break;
-
     case 'download':
       if(confirm(`You are about to leave the website`)) {
         fetchFile(e.target.parentElement.parentElement.previousElementSibling.previousElementSibling.src)
@@ -74,7 +85,6 @@ const fetchFile = (url) => {
 
 // Checks the main container for char entries that exist on the page
 $filterSearch.addEventListener('keyup', (e) => {
-  e.preventDefault();
   const text = e.target.value.toLowerCase();
   document.querySelectorAll('.card-title').forEach(title => {
     // (album || photo) name
@@ -89,16 +99,52 @@ $filterSearch.addEventListener('keyup', (e) => {
   });
 });
 
+$nextPage.addEventListener("click", async () => {
+  if(viewingPhotos) {
+    photos_current_page ++;
+    const paginated = DisplayList(JSON.parse(sessionStorage.getItem('current_photos')),rows,photos_current_page);
+    paintPhotos(paginated);
+    
+  } else {
+    albums_current_page ++;
+    const paginated = DisplayList(JSON.parse(sessionStorage.getItem('data')),rows,albums_current_page);
+    paintAlbums(paginated);
+
+  }
+
+  
+  
+
+
+})
+
+$previousPage.addEventListener("click", async () => {
+
+  if(viewingPhotos) {
+    photos_current_page --;
+    const paginated = DisplayList(JSON.parse(sessionStorage.getItem('current_photos')),rows,photos_current_page);
+    paintPhotos(paginated);
+  } else {
+    albums_current_page --;
+    const paginated = DisplayList(JSON.parse(sessionStorage.getItem('data')),rows,albums_current_page);
+    paintAlbums(paginated);
+
+  }
+  
+  
+
+})
+
 
 // Using mustache fill in relevant data inside the main view using the album templates
 const paintAlbums = (data) => {
   $mainView.innerHTML = '<h1>Albums</h1>';
   try {
-    Object.keys(data).map(id => {
+    data.map(id => {
       const html = Mustache.render($albumTemplate, {
-        title : data[id].title,
-        thumbnailUrl : data[id].content[0].thumbnailUrl,
-        id : id
+        title : id[1].title,
+        thumbnailUrl : id[1].content[0].thumbnailUrl,
+        id : id[0]
       });
       $mainView.insertAdjacentHTML('beforeend',html) 
     });
@@ -110,7 +156,12 @@ const paintAlbums = (data) => {
 
 // Using mustache fill in relevant data inside the main view using the photo templates
 
-const paintPhotos = (data) => {
+const paintPhotos = (data,albumName) => {
+  $mainView.innerHTML = 
+  `<div style="display: flex; align-items: center;">
+    <i id="back-button" class="medium material-icons cursor arrow" style="color: #212121; width: 60px;">arrow_back</i>
+    <h1 style="font-size:32px; margin: 0; text-transform: uppercase;">${JSON.parse(sessionStorage.getItem('album'))}</h1>
+  </div>`;
   try {
     data.forEach(item => {
       const html = Mustache.render($photosTemplate, {

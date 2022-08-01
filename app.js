@@ -9,17 +9,19 @@ const alb = new Albums();
 
 
 
-document.addEventListener('DOMContentLoaded', async (e) => {
+document.addEventListener('DOMContentLoaded', async () => {
   const dataResult = await alb.getAll();
+  sessionStorage.setItem('data',JSON.stringify(dataResult));
+  console.log(JSON.parse(sessionStorage.getItem('data', dataResult)));
   paintAlbums(dataResult);
 });
 
 
 
-$mainView.addEventListener('click', async (e) => {
-  const dataResult = await alb.getAll();
+$mainView.addEventListener('click', (e) => {
   switch(e.target.id) {
     case 'view-button' :
+      const dataResult = JSON.parse(sessionStorage.getItem('data'));
       const albumName = e.target.parentElement.previousElementSibling.children[1].textContent;
       const albumID = e.target.nextElementSibling.textContent;
       $mainView.innerHTML = 
@@ -32,7 +34,8 @@ $mainView.addEventListener('click', async (e) => {
       break;
     
     case 'back-button':
-      paintAlbums(dataResult);
+      
+      paintAlbums(JSON.parse(sessionStorage.getItem('data')));
       viewPhotos = false;
       break;
 

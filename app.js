@@ -57,7 +57,7 @@ $mainView.addEventListener('click', (e) => {
       break;
 
     case 'download':
-      if(confirm(`You are about to leave website`)) {
+      if(confirm(`You are about to leave the website`)) {
         fetchFile(e.target.parentElement.parentElement.previousElementSibling.previousElementSibling.src)
       }
   }

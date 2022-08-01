@@ -1,7 +1,7 @@
 // Album & Photo template with script tag to be dynamically generated using Mustache
 const $albumTemplate = document.getElementById('album-template').innerHTML;
 const $photosTemplate = document.getElementById('photo-template').innerHTML;
-// Main element for all dynamic html elements to be appended inside
+// Main element for all dynamic html elements to be appended onto
 const $mainView = document.querySelector('.row');
 // Search button
 const $filterSearch = document.getElementById('search-example');
@@ -46,8 +46,12 @@ $mainView.addEventListener('click', (e) => {
       viewPhoto = !viewPhoto;
       let downloadIcon = e.target.parentElement.previousElementSibling;
       let photoTitleElement = e.target.parentElement.parentElement.previousElementSibling;
+      let newVal = !eval(e.target.getAttribute('viewed'));
+      
+      e.target.setAttribute('viewed',newVal);
+    
 
-      if(viewPhoto) {
+      if(newVal) {
         downloadIcon.style = "visibility:hidden;";
         photoTitleElement.style = "opacity:0; display:flex; height: 190px; width: 100%; justify-content: center; align-items: center; padding: 12px; margin: 0; font-size: 16px; font-weight: 600;";
       } else {
@@ -70,6 +74,7 @@ const fetchFile = (url) => {
 
 // Checks the main container for char entries that exist on the page
 $filterSearch.addEventListener('keyup', (e) => {
+  e.preventDefault();
   const text = e.target.value.toLowerCase();
   document.querySelectorAll('.card-title').forEach(title => {
     // (album || photo) name

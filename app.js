@@ -4,12 +4,17 @@ const $filterSearch = document.getElementById('search-example');
 const $photosTemplate = document.getElementById('photo-template').innerHTML;
 const $nextPage = document.getElementById('next-page');
 const $previousPage = document.getElementById('previous-page');
+const $viewAll = document.getElementById('view-all');
+const $viewPages = document.getElementById('view-pages')
 
 let viewPhoto = false;
 let current_page = 1;
 let rows = 24;
 let end = false;
 const alb = new Albums();
+
+console.log($viewAll);
+
 
 function DisplayList(items,rows_per_page,page) {
   items = Object.entries(items).slice(0)

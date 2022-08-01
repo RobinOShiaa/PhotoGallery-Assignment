@@ -15,11 +15,6 @@
       <nav class="menu" data-target="menu">
         
         <div class="nav-wrapper #212121 grey darken-4">  
-          <ul class="right hide-on-med-and-down">
-            <li><a id ='view-pages' href="#">View By Page</a></li>
-            <li><a id ='view-all' href="#">View All</a></li>
-
-          </ul>   
           <form>
             <div class="input-field">
               <input id="search-example" type="search" required="">
@@ -39,10 +34,6 @@
             <h1>Albums</h1>
           </div>
       </div>
-      <ul class="pagination">
-        <li class="enabled"><a href="#!"><i id="previous-page" class="material-icons">chevron_left</i></a></li>
-        <li class="enabled"><a href="#!"><i id="next-page" class="material-icons">chevron_right</i></a></li>
-      </ul>
     </div>
 
     <script id="album-template" type="text/html">
@@ -59,17 +50,17 @@
     </script>
     
     <script id="photo-template" type="text/html">
-      <div class="col s1 card card-panel hoverable center-align" style="width: 200px; margin: 5px; padding: 0;">
+      <div class="col s1 card card-panel hoverable center-align" style="width: 220px; margin: 5px; padding: 0;">
         <div class="card-image">
           <img src={{thumbnailUrl}} />
           <p class="card-title" style="display:flex; height: 190px; width: 100%; justify-content: center; align-items: center; padding: 12px; margin: 0; font-size: 16px; font-weight: 600;">{{title}}</p>
           <div style="display: flex; justify-content: right; width: 100%; bottom: 0; position: absolute; ">
             <button class="cursor" style="background: none;">
-              <i class="tiny material-icons cursor">cloud_download</i>
+              <i id="download" class="tiny material-icons cursor">cloud_download</i>
             </button>
             
             <button  class="cursor" style="background: none;">
-              <i  id="zoom_in" class="tiny material-icons cursor">zoom_in</i>
+              <i id="zoom_in" class="tiny material-icons cursor">zoom_in</i>
             </button>
           </div>
         </div>

@@ -13,7 +13,7 @@ const $pages = document.querySelector('.pagination');
 const $pageNum = document.getElementById('page_num');
 
 
-const alb = new Albums();
+const alb = new Api();
 let viewingPhotos = false,
 albums_current_page = 1,
 photos_current_page = 1,

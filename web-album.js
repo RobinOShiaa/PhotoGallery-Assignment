@@ -1,7 +1,7 @@
 const ALBUM_URL =  "https://jsonplaceholder.typicode.com/albums";
 const PHOTOS_URL = 'https://jsonplaceholder.typicode.com/photos';
 
-class Albums {
+class Api {
   // Retrieve all relevant JSON from photos and albums and formulate it an entire data set using an Object with albumId : [photos]
   getAll() {
     return new Promise(async (resolve,reject) => {

@@ -8,7 +8,7 @@ const $filterSearch = document.getElementById('search-example');
 // Button to return to albums 
 const $backButton = document.getElementsByClassName('back-button');
 const $nextPage = document.getElementById('next-page');
-const $previousPage = document.getElementById('previous-page');
+const $previousPageButton = document.getElementById('previous-page');
 const $pages = document.querySelector('.pagination');
 const $num = document.getElementById('page_num');
 
@@ -42,7 +42,7 @@ const assemblePages = (num_of_totalPages) => {
 
 const checkButtonsVisible = (num) => {
   num === num_of_totalPages ? $nextPage.style = 'display:none;' : $nextPage.style= 'display:block;'
-  num === 1 ? $previousPage.style = 'display:none;' : $previousPage.style= 'display:block;'
+  num === 1 ? $previousPageButton.style = 'display:none;' : $previousPageButton.style= 'display:block;'
 }
 
 const goToPageNum = (e) => {
@@ -53,7 +53,7 @@ const goToPageNum = (e) => {
     console.log(e.target.textContent);
   } else {
     photos_current_page = +e.target.textContent;
-    checkButtonsVisible(albums_current_page)
+    checkButtonsVisible(photos_current_page)
     paintPhotos(DisplayList(JSON.parse(sessionStorage.getItem('current_photos')),rows,photos_current_page))
     console.log(e.target.textContent);
   }
@@ -63,8 +63,8 @@ const goToPageNum = (e) => {
 document.addEventListener('DOMContentLoaded', async () => {
   const dataResult = Object.entries(await alb.getAll()).slice(0);
   data = dataResult;
-  num_of_totalPages = dataResult.length % rows != 0 ? Number((dataResult.length / rows).toFixed(0)) + 1 : Number(dataResult.length / rows) + 1;
-  $previousPage.style = 'display:none;';
+  num_of_totalPages = dataResult.length % rows != 0 ? Number((dataResult.length / rows).toFixed(0)) + 1 : Number(dataResult.length / rows);
+  $previousPageButton.style = 'display:none;'
 
   assemblePages(num_of_totalPages);
   // store data set inside session storage to be referenced later throughout the code
@@ -77,7 +77,7 @@ $mainView.addEventListener('click', (e) => {
   switch(e.target.id) {
     case 'view-button' :
       viewingPhotos = true;
-      $previousPage.style = 'display:none;';
+      $previousPageButton.style = 'display:none;';
       // Retrieve data set
       const dataResult = JSON.parse(sessionStorage.getItem('data'));
       const albumName = e.target.parentElement.previousElementSibling.children[1].textContent;
@@ -86,7 +86,7 @@ $mainView.addEventListener('click', (e) => {
       // Set heading of corresponding photos viewed
       const photos = Object.fromEntries(dataResult)[albumID].content;
       sessionStorage.setItem('current_photos',JSON.stringify(photos));
-      num_of_totalPages = photos.length % rows != 0 ? Number((photos.length / rows).toFixed(0)) + 1 : Number(photos.length / rows) + 1;
+      num_of_totalPages = photos.length % rows != 0 ? Number((photos.length / rows).toFixed(0)) + 1 : Number(photos.length / rows);
       assemblePages(num_of_totalPages);
       paintPhotos(DisplayList(photos,rows,photos_current_page));
       break;
@@ -148,7 +148,7 @@ $nextPage.addEventListener("click", async () => {
   }
 })
 
-$previousPage.addEventListener("click", async () => {
+$previousPageButton.addEventListener("click", async () => {
   if(viewingPhotos) {
     photos_current_page --;
     const paginated = DisplayList(JSON.parse(sessionStorage.getItem('current_photos')),rows,photos_current_page);

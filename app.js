@@ -12,7 +12,6 @@ const $previousPage = document.getElementById('previous-page');
 const $pages = document.querySelector('.pagination');
 const $num = document.getElementById('page_num');
 
-
 let viewingPhotos = false;
 const alb = new Albums();
 let albums_current_page = 1;
@@ -56,6 +55,7 @@ const goToPageNum = (e) => {
 // Event listener on the startup of the webpage
 document.addEventListener('DOMContentLoaded', async () => {
   const dataResult = Object.entries(await alb.getAll()).slice(0);
+  data = dataResult;
   num_of_totalPages = dataResult.length % rows != 0 ? Number((dataResult.length / rows).toFixed(0)) + 2 : Number(dataResult.length / rows) + 1;
   assemblePages(num_of_totalPages);
   // store data set inside session storage to be referenced later throughout the code
@@ -105,7 +105,6 @@ $mainView.addEventListener('click', (e) => {
         fetchFile(e.target.parentElement.parentElement.previousElementSibling.previousElementSibling.src)
       }
   }
-
 });
 
 const fetchFile = (url) => {
@@ -115,17 +114,8 @@ const fetchFile = (url) => {
 // Checks the main container for char entries that exist on the page
 $filterSearch.addEventListener('keyup', (e) => {
   const text = e.target.value.toLowerCase();
-  document.querySelectorAll('.card-title').forEach(title => {
-    // (album || photo) name
-    const item = title.textContent;
-    if(item.toLowerCase().indexOf(text) != -1){
-      // show card of photo || album
-      title.parentElement.parentElement.style.display = 'block';
-    } else {
-      // dont show card of photo || album
-      title.parentElement.parentElement.style.display = 'none';
-    }
-  });
+  const searchRes = data.filter(title => title[1].title.indexOf(text) !== -1 ? title[1].title : '');
+  paintAlbums(searchRes);
 });
 
 $nextPage.addEventListener("click", async () => {

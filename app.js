@@ -78,7 +78,6 @@ $mainView.addEventListener('click', (e) => {
   switch(e.target.id) {
     case 'view-button' :
       viewingPhotos = true;
-      
       // Retrieve data set
       const dataResult = JSON.parse(sessionStorage.getItem('data'));
       const albumName = e.target.parentElement.previousElementSibling.children[1].textContent;
@@ -127,11 +126,14 @@ const fetchFile = (url) => {
 $filterSearch.addEventListener('keyup', (e) => {
   const text = e.target.value.toLowerCase();
   if(!viewingPhotos) {
-    const searchRes = JSON.parse(sessionStorage.getItem('data')).filter(elem => elem[1].title.indexOf(text) !== -1 ? elem[1].title : '');
-    paintAlbums(searchRes);
+    data = JSON.parse(sessionStorage.getItem('data'))
+    const searchRes = data.filter(elem => elem[1].title.indexOf(text) !== -1 ? elem[1].title : '');
+    text === '' ? paintAlbums(DisplayList(data,rows,albums_current_page)) : paintAlbums(searchRes);
+    
   } else {
-    const searchRes = JSON.parse(sessionStorage.getItem('current_photos')).filter(elem => elem.title.indexOf(text) !== -1 ? elem.title : null);
-    paintPhotos(searchRes);
+    data = JSON.parse(sessionStorage.getItem('current_photos'))
+    const searchRes = data.filter(elem => elem.title.indexOf(text) !== -1 ? elem.title : null);
+    text === '' ? paintPhotos(DisplayList(data,rows,photos_current_page)) : paintPhotos(searchRes);
   }
 });
 

@@ -114,8 +114,14 @@ const fetchFile = (url) => {
 // Checks the main container for char entries that exist on the page
 $filterSearch.addEventListener('keyup', (e) => {
   const text = e.target.value.toLowerCase();
-  const searchRes = data.filter(title => title[1].title.indexOf(text) !== -1 ? title[1].title : '');
-  paintAlbums(searchRes);
+  if(!viewingPhotos) {
+    const searchRes = JSON.parse(sessionStorage.getItem('data')).filter(title => title[1].title.indexOf(text) !== -1 ? title[1].title : '');
+    paintAlbums(searchRes);
+  } else {
+    const searchRes = JSON.parse(sessionStorage.getItem('current_photos')).filter(elem => elem.title.indexOf(text) !== -1 ? title.title : null);
+    paintPhotos(searchRes);
+  }
+ 
 });
 
 $nextPage.addEventListener("click", async () => {

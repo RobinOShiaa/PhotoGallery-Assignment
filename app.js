@@ -4,22 +4,23 @@ const $photosTemplate = document.getElementById('photo-template').innerHTML;
 // Main element for all dynamic html elements to be appended onto
 const $mainView = document.querySelector('.row');
 // Search button
-const $filterSearch = document.getElementById('search-example');
-// Button to return to albums 
-const $backButton = document.getElementsByClassName('back-button');
-const $nextPage = document.getElementById('next-page');
-const $previousPageButton = document.getElementById('previous-page');
-const $pages = document.querySelector('.pagination');
-const $num = document.getElementById('page_num');
+const $searchInput = document.getElementById('search-example');
 
-let viewingPhotos = false;
+const $nextPageButton = document.getElementById('next-page');
+const $previousPageButton = document.getElementById('previous-page');
+
+const $pages = document.querySelector('.pagination');
+const $pageNum = document.getElementById('page_num');
+
+
 const alb = new Albums();
-let albums_current_page = 1;
-let photos_current_page = 1;
-let num_of_totalPages;
-let current_page;
-let data;
-let rows = 24;
+let viewingPhotos = false,
+albums_current_page = 1;
+photos_current_page = 1;
+num_of_totalPages;
+data;
+rows = 24;
+
 
 function DisplayList(items,rows_per_page,page) {
   page --;
@@ -29,21 +30,21 @@ function DisplayList(items,rows_per_page,page) {
   return paginatedItems;
 }
 
-const assemblePages = (num_of_totalPages) => {
+const assemblePageNumbers = (num_of_totalPages) => {
   Array.from($pages.firstElementChild.children).forEach((element) => {
     element.className === 'page' && element.remove();
   })
   for (let i = 1; i <= num_of_totalPages; i++) {
-    const html = Mustache.render($num.innerHTML, {
+    const html = Mustache.render($pageNum.innerHTML, {
       num : i
     });
     $pages.firstElementChild.insertAdjacentHTML('beforeend',html);
   }
 }
 
-const checkButtonsVisible = (num) => {
-  num === num_of_totalPages ? $nextPage.style = 'display:none;' : $nextPage.style= 'display:block;'
-  num === 1 ? $previousPageButton.style = 'display:none;' : $previousPageButton.style= 'display:block;'
+const checkButtonsVisible = (pageNum) => {
+  pageNum === num_of_totalPages ? $nextPageButton.style = 'display:none;' : $nextPageButton.style= 'display:block;'
+  pageNum === 1 ? $previousPageButton.style = 'display:none;' : $previousPageButton.style= 'display:block;'
 }
 
 const goToPageNum = (e) => {
@@ -67,13 +68,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   num_of_totalPages = dataResult.length % rows != 0 ? Number((dataResult.length / rows).toFixed(0)) + 1 : Number(dataResult.length / rows);
   $previousPageButton.style = 'display:none;'
 
-  assemblePages(num_of_totalPages);
+  assemblePageNumbers(num_of_totalPages);
   // store data set inside session storage to be referenced later throughout the code
   sessionStorage.setItem('data',JSON.stringify(dataResult));
   const paginated = DisplayList(dataResult,rows,albums_current_page)
   paintAlbums(paginated);
 });
-
+// Event delegation of event elements via root element 
 $mainView.addEventListener('click', (e) => {
   switch(e.target.id) {
     case 'view-button' :
@@ -87,7 +88,7 @@ $mainView.addEventListener('click', (e) => {
       const photos = Object.fromEntries(dataResult)[albumID].content;
       sessionStorage.setItem('current_photos',JSON.stringify(photos));
       num_of_totalPages = photos.length % rows != 0 ? Number((photos.length / rows).toFixed(0)) + 1 : Number(photos.length / rows);
-      assemblePages(num_of_totalPages);
+      assemblePageNumbers(num_of_totalPages);
       checkButtonsVisible(photos_current_page)
       paintPhotos(DisplayList(photos,rows,photos_current_page));
       break;
@@ -96,7 +97,7 @@ $mainView.addEventListener('click', (e) => {
       photos_current_page = 1;
       data = JSON.parse(sessionStorage.getItem('data'));
       num_of_totalPages = data.length % rows != 0 ? Number((data.length / rows).toFixed(0)) + 1 : Number(data.length / rows) + 1;
-      assemblePages(num_of_totalPages);
+      assemblePageNumbers(num_of_totalPages);
       paintAlbums(DisplayList(data,rows,albums_current_page));
       viewingPhotos = false;
       break;
@@ -123,7 +124,7 @@ const fetchFile = (url) => {
 }
 
 // Checks the main container for char entries that exist on the page
-$filterSearch.addEventListener('keyup', (e) => {
+$searchInput.addEventListener('keyup', (e) => {
   const text = e.target.value.toLowerCase();
   if(!viewingPhotos) {
     data = JSON.parse(sessionStorage.getItem('data'))
@@ -137,7 +138,7 @@ $filterSearch.addEventListener('keyup', (e) => {
   }
 });
 
-$nextPage.addEventListener("click", async () => {
+$nextPageButton.addEventListener("click", async () => {
   if(viewingPhotos) {
     photos_current_page ++;
     checkButtonsVisible(photos_current_page);

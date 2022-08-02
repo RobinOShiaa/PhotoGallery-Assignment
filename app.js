@@ -32,7 +32,7 @@ const assemblePages = (num_of_totalPages) => {
   Array.from($pages.firstElementChild.children).forEach((element) => {
     element.className === 'page' && element.remove();
   })
-  for (let i = 1; i < num_of_totalPages; i++) {
+  for (let i = 1; i <= num_of_totalPages; i++) {
     const html = Mustache.render($num.innerHTML, {
       num : i
     });
@@ -40,13 +40,20 @@ const assemblePages = (num_of_totalPages) => {
   }
 }
 
+const checkButtonsVisible = (num) => {
+  num === num_of_totalPages ? $nextPage.style = 'display:none;' : $nextPage.style= 'display:block;'
+  num === 1 ? $previousPage.style = 'display:none;' : $previousPage.style= 'display:block;'
+}
+
 const goToPageNum = (e) => {
   if (!viewingPhotos){
     albums_current_page = +e.target.textContent;
+    checkButtonsVisible(albums_current_page)
     paintAlbums(DisplayList(JSON.parse(sessionStorage.getItem('data')),rows,albums_current_page))
     console.log(e.target.textContent);
   } else {
     photos_current_page = +e.target.textContent;
+    checkButtonsVisible(albums_current_page)
     paintPhotos(DisplayList(JSON.parse(sessionStorage.getItem('current_photos')),rows,photos_current_page))
     console.log(e.target.textContent);
   }
@@ -56,7 +63,9 @@ const goToPageNum = (e) => {
 document.addEventListener('DOMContentLoaded', async () => {
   const dataResult = Object.entries(await alb.getAll()).slice(0);
   data = dataResult;
-  num_of_totalPages = dataResult.length % rows != 0 ? Number((dataResult.length / rows).toFixed(0)) + 2 : Number(dataResult.length / rows) + 1;
+  num_of_totalPages = dataResult.length % rows != 0 ? Number((dataResult.length / rows).toFixed(0)) + 1 : Number(dataResult.length / rows) + 1;
+  checkButtonsVisible(albums_current_page);
+
   assemblePages(num_of_totalPages);
   // store data set inside session storage to be referenced later throughout the code
   sessionStorage.setItem('data',JSON.stringify(dataResult));
@@ -115,10 +124,10 @@ const fetchFile = (url) => {
 $filterSearch.addEventListener('keyup', (e) => {
   const text = e.target.value.toLowerCase();
   if(!viewingPhotos) {
-    const searchRes = JSON.parse(sessionStorage.getItem('data')).filter(title => title[1].title.indexOf(text) !== -1 ? title[1].title : '');
+    const searchRes = JSON.parse(sessionStorage.getItem('data')).filter(elem => elem[1].title.indexOf(text) !== -1 ? elem[1].title : '');
     paintAlbums(searchRes);
   } else {
-    const searchRes = JSON.parse(sessionStorage.getItem('current_photos')).filter(elem => elem.title.indexOf(text) !== -1 ? title.title : null);
+    const searchRes = JSON.parse(sessionStorage.getItem('current_photos')).filter(elem => elem.title.indexOf(text) !== -1 ? elem.title : null);
     paintPhotos(searchRes);
   }
  
@@ -127,11 +136,13 @@ $filterSearch.addEventListener('keyup', (e) => {
 $nextPage.addEventListener("click", async () => {
   if(viewingPhotos) {
     photos_current_page ++;
+    checkButtonsVisible(photos_current_page);
     const paginated = DisplayList(JSON.parse(sessionStorage.getItem('current_photos')),rows,photos_current_page);
     paintPhotos(paginated);
     
   } else {
     albums_current_page ++;
+    checkButtonsVisible(albums_current_page);
     const paginated = DisplayList(JSON.parse(sessionStorage.getItem('data')),rows,albums_current_page);
     paintAlbums(paginated);
   }
@@ -142,9 +153,11 @@ $previousPage.addEventListener("click", async () => {
   if(viewingPhotos) {
     photos_current_page --;
     const paginated = DisplayList(JSON.parse(sessionStorage.getItem('current_photos')),rows,photos_current_page);
+    checkButtonsVisible(photos_current_page);
     paintPhotos(paginated);
   } else {
     albums_current_page --;
+    checkButtonsVisible(albums_current_page);
     const paginated = DisplayList(JSON.parse(sessionStorage.getItem('data')),rows,albums_current_page);
     paintAlbums(paginated);
   }

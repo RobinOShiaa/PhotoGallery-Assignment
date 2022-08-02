@@ -77,7 +77,7 @@ $mainView.addEventListener('click', (e) => {
   switch(e.target.id) {
     case 'view-button' :
       viewingPhotos = true;
-      $previousPageButton.style = 'display:none;';
+      
       // Retrieve data set
       const dataResult = JSON.parse(sessionStorage.getItem('data'));
       const albumName = e.target.parentElement.previousElementSibling.children[1].textContent;
@@ -88,6 +88,7 @@ $mainView.addEventListener('click', (e) => {
       sessionStorage.setItem('current_photos',JSON.stringify(photos));
       num_of_totalPages = photos.length % rows != 0 ? Number((photos.length / rows).toFixed(0)) + 1 : Number(photos.length / rows);
       assemblePages(num_of_totalPages);
+      checkButtonsVisible(photos_current_page)
       paintPhotos(DisplayList(photos,rows,photos_current_page));
       break;
 

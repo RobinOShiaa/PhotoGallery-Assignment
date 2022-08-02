@@ -15,10 +15,10 @@ const $pageNum = document.getElementById('page_num');
 
 const alb = new Albums();
 let viewingPhotos = false,
-albums_current_page = 1;
-photos_current_page = 1;
-num_of_totalPages;
-data;
+albums_current_page = 1,
+photos_current_page = 1,
+num_of_totalPages,
+data,
 rows = 24;
 
 

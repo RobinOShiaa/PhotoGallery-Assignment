@@ -4,6 +4,14 @@
   top:0;
 }
 
+a[selected]:hover {
+  font-size : 1.6rem;
+}
+
+#next-page:hover,#previous-page:hover {
+  color : #ccc;
+}
+
 
 .row {
   margin-top: 10%;

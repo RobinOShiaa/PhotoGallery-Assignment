@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const dataResult = Object.entries(await alb.getAll()).slice(0);
   data = dataResult;
   num_of_totalPages = dataResult.length % rows != 0 ? Number((dataResult.length / rows).toFixed(0)) + 1 : Number(dataResult.length / rows) + 1;
-  checkButtonsVisible(albums_current_page);
+  $previousPage.style = 'display:none;';
 
   assemblePages(num_of_totalPages);
   // store data set inside session storage to be referenced later throughout the code
@@ -77,6 +77,7 @@ $mainView.addEventListener('click', (e) => {
   switch(e.target.id) {
     case 'view-button' :
       viewingPhotos = true;
+      $previousPage.style = 'display:none;';
       // Retrieve data set
       const dataResult = JSON.parse(sessionStorage.getItem('data'));
       const albumName = e.target.parentElement.previousElementSibling.children[1].textContent;
@@ -85,15 +86,15 @@ $mainView.addEventListener('click', (e) => {
       // Set heading of corresponding photos viewed
       const photos = Object.fromEntries(dataResult)[albumID].content;
       sessionStorage.setItem('current_photos',JSON.stringify(photos));
-      num_of_totalPages = photos.length % rows != 0 ? Number((photos.length / rows).toFixed(0)) + 2 : Number(photos.length / rows) + 1;
+      num_of_totalPages = photos.length % rows != 0 ? Number((photos.length / rows).toFixed(0)) + 1 : Number(photos.length / rows) + 1;
       assemblePages(num_of_totalPages);
       paintPhotos(DisplayList(photos,rows,photos_current_page));
       break;
-    
+
     case 'back-button':
       photos_current_page = 1;
       data = JSON.parse(sessionStorage.getItem('data'));
-      num_of_totalPages = data.length % rows != 0 ? Number((data.length / rows).toFixed(0)) + 2 : Number(data.length / rows) + 1;
+      num_of_totalPages = data.length % rows != 0 ? Number((data.length / rows).toFixed(0)) + 1 : Number(data.length / rows) + 1;
       assemblePages(num_of_totalPages);
       paintAlbums(DisplayList(data,rows,albums_current_page));
       viewingPhotos = false;
@@ -130,7 +131,6 @@ $filterSearch.addEventListener('keyup', (e) => {
     const searchRes = JSON.parse(sessionStorage.getItem('current_photos')).filter(elem => elem.title.indexOf(text) !== -1 ? elem.title : null);
     paintPhotos(searchRes);
   }
- 
 });
 
 $nextPage.addEventListener("click", async () => {
@@ -149,7 +149,6 @@ $nextPage.addEventListener("click", async () => {
 })
 
 $previousPage.addEventListener("click", async () => {
-
   if(viewingPhotos) {
     photos_current_page --;
     const paginated = DisplayList(JSON.parse(sessionStorage.getItem('current_photos')),rows,photos_current_page);

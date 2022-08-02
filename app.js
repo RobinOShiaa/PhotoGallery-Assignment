@@ -10,15 +10,16 @@ const $backButton = document.getElementsByClassName('back-button');
 const $nextPage = document.getElementById('next-page');
 const $previousPage = document.getElementById('previous-page');
 const $pages = document.querySelector('.pagination');
+const $num = document.getElementById('page_num');
 
 
 let viewingPhotos = false;
 const alb = new Albums();
 let albums_current_page = 1;
 let photos_current_page = 1;
-
-let rows = 24;
 let num_of_totalPages;
+let data;
+let rows = 24;
 
 function DisplayList(items,rows_per_page,page) {
   page --;
@@ -26,11 +27,37 @@ function DisplayList(items,rows_per_page,page) {
   let end = start + rows_per_page;
   let paginatedItems = items.slice(start, end);
   return paginatedItems;
-  
 }
+
+const assemblePages = (num_of_totalPages) => {
+  Array.from($pages.firstElementChild.children).forEach((element) => {
+    element.className === 'page' && element.remove();
+  })
+  for (let i = 1; i < num_of_totalPages; i++) {
+    const html = Mustache.render($num.innerHTML, {
+      num : i
+    });
+    $pages.firstElementChild.insertAdjacentHTML('beforeend',html);
+  }
+}
+
+const goToPageNum = (e) => {
+  if (!viewingPhotos){
+    albums_current_page = +e.target.textContent;
+    paintAlbums(DisplayList(JSON.parse(sessionStorage.getItem('data')),rows,albums_current_page))
+    console.log(e.target.textContent);
+  } else {
+    photos_current_page = +e.target.textContent;
+    paintPhotos(DisplayList(JSON.parse(sessionStorage.getItem('current_photos')),rows,photos_current_page))
+    console.log(e.target.textContent);
+  }
+}
+
 // Event listener on the startup of the webpage
 document.addEventListener('DOMContentLoaded', async () => {
   const dataResult = Object.entries(await alb.getAll()).slice(0);
+  num_of_totalPages = dataResult.length % rows != 0 ? Number((dataResult.length / rows).toFixed(0)) + 2 : Number(dataResult.length / rows) + 1;
+  assemblePages(num_of_totalPages);
   // store data set inside session storage to be referenced later throughout the code
   sessionStorage.setItem('data',JSON.stringify(dataResult));
   const paginated = DisplayList(dataResult,rows,albums_current_page)
@@ -47,26 +74,26 @@ $mainView.addEventListener('click', (e) => {
       sessionStorage.setItem('album',JSON.stringify(albumName));
       const albumID = e.target.nextElementSibling.textContent;
       // Set heading of corresponding photos viewed
-     
       const photos = Object.fromEntries(dataResult)[albumID].content;
-      console.log(photos);
       sessionStorage.setItem('current_photos',JSON.stringify(photos));
+      num_of_totalPages = photos.length % rows != 0 ? Number((photos.length / rows).toFixed(0)) + 2 : Number(photos.length / rows) + 1;
+      assemblePages(num_of_totalPages);
       paintPhotos(DisplayList(photos,rows,photos_current_page));
       break;
     
     case 'back-button':
       photos_current_page = 1;
-      paintAlbums(DisplayList(JSON.parse(sessionStorage.getItem('data')),rows,albums_current_page));
+      data = JSON.parse(sessionStorage.getItem('data'));
+      num_of_totalPages = data.length % rows != 0 ? Number((data.length / rows).toFixed(0)) + 2 : Number(data.length / rows) + 1;
+      assemblePages(num_of_totalPages);
+      paintAlbums(DisplayList(data,rows,albums_current_page));
       viewingPhotos = false;
       break;
 
     case 'zoom_in':
       let photoTitleElement = e.target.parentElement.parentElement.previousElementSibling;
       let newVal = !eval(e.target.getAttribute('viewed'));
-      
       e.target.setAttribute('viewed',newVal);
-    
-
       if(newVal) {
         photoTitleElement.style = "opacity:0; display:flex; height: 190px; width: 100%; justify-content: center; align-items: center; padding: 12px; margin: 0; font-size: 16px; font-weight: 600;";
       } else {
@@ -111,13 +138,7 @@ $nextPage.addEventListener("click", async () => {
     albums_current_page ++;
     const paginated = DisplayList(JSON.parse(sessionStorage.getItem('data')),rows,albums_current_page);
     paintAlbums(paginated);
-
   }
-
-  
-  
-
-
 })
 
 $previousPage.addEventListener("click", async () => {
@@ -130,11 +151,7 @@ $previousPage.addEventListener("click", async () => {
     albums_current_page --;
     const paginated = DisplayList(JSON.parse(sessionStorage.getItem('data')),rows,albums_current_page);
     paintAlbums(paginated);
-
   }
-  
-  
-
 })
 
 

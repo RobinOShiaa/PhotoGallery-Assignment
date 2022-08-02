@@ -31,12 +31,12 @@
           <div class="row">
           </div>
           <ul class="pagination">
-            <li class="enabled"><a href="#!"><i id="previous-page" class="material-icons">chevron_left</i></a></li>
-            <li class="enabled"><a href="#!"><i id="next-page" class="material-icons">chevron_right</i></a></li>
+            <li id="beginning" class="enabled"><a href="#!"><i id="previous-page" class="material-icons">chevron_left</i></a></li>
+            <li class="enabled"><a href="#!"><i id="next-page"  class="material-icons">chevron_right</i></a></li>
           </ul>
       
     </div>
-    <script id="page_num" type="text/html"></div><li class="waves-effect"><a href="#!">{{num}}</a></li></script>
+    <script id="page_num" type="text/html"></div><li class="page"onclick="goToPageNum(event)" ><a href="#!">{{num}}</a></li></script>
     <script id="album-template" type="text/html">
       <div class="col s1 card card-panel hoverable center-align" style="width: 190px; margin: 5px; padding: 0px;">
         <div class="card-image">

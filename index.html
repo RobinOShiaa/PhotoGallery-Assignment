@@ -36,7 +36,7 @@
           </ul>
       
     </div>
-    <script id="page_num" type="text/html"></div><li class="page" onclick="goToPageNum(event)" ><a href="#!">{{num}}</a></li></script>
+    <script id="page_num" type="text/html"></div><li class="page" onclick="goToPageNum(event)" ><a selected=false href="#!">{{num}}</a></li></script>
     <script id="album-template" type="text/html">
       <div class="col s1 card card-panel hoverable center-align" style="width: 190px; margin: 5px; padding: 0px;">
         <div class="card-image">
@@ -50,7 +50,7 @@
       </div> 
     </script>
     <script id="photo-template" type="text/html">
-      <div class="col s1 card card-panel hoverable center-align" style="width: 220px; margin: 5px; padding: 0;">
+      <div class="col s1 card card-panel hoverable center-align" style="width: 190px; margin: 5px; padding: 0;">
         <div class="card-image">
           <img src={{thumbnailUrl}} />
           <p class="card-title" style="display:flex; height: 190px; width: 100%; justify-content: center; align-items: center; padding: 12px; margin: 0; font-size: 16px; font-weight: 600;">{{title}}</p>

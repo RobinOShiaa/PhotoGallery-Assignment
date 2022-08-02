@@ -17,6 +17,7 @@ const alb = new Albums();
 let albums_current_page = 1;
 let photos_current_page = 1;
 let num_of_totalPages;
+let current_page;
 let data;
 let rows = 24;
 
